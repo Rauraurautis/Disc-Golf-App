@@ -3,7 +3,7 @@ import { StyleSheet, View, FlatList, Text, TouchableOpacity } from "react-native
 import { Input, Icon } from 'react-native-elements';
 import { useSelector } from 'react-redux'
 import Scoreboard from './Scoreboard';
-import ToastMessage, {toastRef} from '../utils/ToastMessage';
+import ToastMessage, { toastRef } from '../../components/ToastMessage';
 
 export default function RoundScreen({ navigation, route }) {
     const [scoreboardVisible, setScoreboardVisible] = useState(false)
@@ -22,11 +22,16 @@ export default function RoundScreen({ navigation, route }) {
             return
         }
 
+        //Kierroksen kokonaismääräistä par-tulosta asetetaan tässä. Hyödynnetään Scoreboard-komponentissa pelaajien heittojen kokonaismäärän ja par-tuloksen keskenäisessä vertailussa
+        setRound({ ...round, roundStatus: { ...round.roundStatus, currentTotalPar: (round.roundStatus.currentTotalPar += round.holes[round.roundStatus.hole - 1]) } })
+
         //Käy jokaisen pelaajan läpi ja asettaa heille määrätyt pisteet
+
         scoreInputs.forEach(ip => {
             setPlayers(players.map(p => {
                 if (p.id === ip.id) {
-                    return { ...p, roundScore: p.roundScore += ip.score }
+                    console.log(round.roundStatus.currentTotalPar + " " + round.roundStatus.hole)
+                    return { ...p, roundScore: p.roundScore += ip.score, roundAvgScore: ((ip.score - round.holes[round.roundStatus.hole - 1]) + p.roundAvgScore) / round.roundStatus.hole }
                 } else {
                     return p
                 }
@@ -37,9 +42,6 @@ export default function RoundScreen({ navigation, route }) {
         setScoreInputs(scoreInputs.map(ip => {
             return { id: ip.id, score: "" }
         }))
-
-        //Kierroksen kokonaismääräistä par-tulosta asetetaan tässä. Hyödynnetään Scoreboard-komponentissa pelaajien heittojen kokonaismäärän ja par-tuloksen keskenäisessä vertailussa
-        setRound({ ...round, roundStatus: { ...round.roundStatus, currentTotalPar: (round.roundStatus.currentTotalPar += round.holes[round.roundStatus.hole - 1]) } })
 
         if (isRoundOver() === undefined) {
             setScoreboardVisible(true)
@@ -62,24 +64,24 @@ export default function RoundScreen({ navigation, route }) {
 
     return (
         <View style={styles.container}>
-            <ToastMessage ref={toastRef} message={"You need to enter scores for all players!"}/>
+            <ToastMessage ref={toastRef} message={"You need to enter scores for all players!"} />
             <Scoreboard scoreboardVisible={scoreboardVisible} setScoreboardVisible={setScoreboardVisible} players={players} round={round} isRoundOver={isRoundOver} navigation={navigation} />
             <Text style={styles.holeinfo}>{`Hole ${round.roundStatus.hole}`}</Text>
             <Text style={styles.parinfo}>{`Par ${round.holes[round.roundStatus.hole - 1]}`}</Text>
             <FlatList
                 keyExtractor={(item, index) => index.toString()}
                 data={selectedPlayers}
-                renderItem={({ item }) => (<Input textAlign="center" labelStyle={styles.scoreLabel}inputContainerStyle={styles.scoreInput} label={item.name} keyboardType="numeric"
-                 value={"" + scoreInputs.filter(ip => ip.id === item.id)[0].score} onChangeText={text => handleScoreChange(item.id, isNaN(parseInt(text)) ? "" : parseInt(text))} />)} />
-            <View style={styles.btnContainer}>
-                <TouchableOpacity style={{...styles.btn, marginLeft: 10}} onPress={() => setScoreboardVisible(true)}>
+                renderItem={({ item }) => (<Input textAlign="center" labelStyle={styles.scoreLabel} inputContainerStyle={styles.scoreInput} label={item.name} keyboardType="numeric"
+                    value={"" + scoreInputs.filter(ip => ip.id === item.id)[0].score} onChangeText={text => handleScoreChange(item.id, isNaN(parseInt(text)) ? "" : parseInt(text))} />)} />
+            <View style={{ ...styles.btnContainer, justifyContent: isRoundOver() !== undefined ? "space-between" : "flex-end" }}>
+                {isRoundOver() !== undefined ? <TouchableOpacity style={{ ...styles.btn, marginLeft: 10 }} onPress={() => setScoreboardVisible(true)}>
                     <Text style={{ fontSize: 25 }}>Scoreboard</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{...styles.btn, marginRight: 10,}} onPress={() => handleNextHole()}>
+                </TouchableOpacity> : null}
+                <TouchableOpacity style={{ ...styles.btn, marginRight: 10 }} onPress={() => handleNextHole()}>
                     <Text style={{ fontSize: 25 }}>{isRoundOver() === undefined ? "Results" : "Next hole"}</Text>
                 </TouchableOpacity>
             </View>
-            
+
         </View>
     )
 }

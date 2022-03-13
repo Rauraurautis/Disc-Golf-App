@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, FlatList, Text, ImageBackground, StyleSheet } from 'react-native'
 import { Input, ListItem } from 'react-native-elements'
-import { db } from './FirebaseSetup'
+import { db } from '../../utils/FirebaseSetup'
 import { ref, onValue } from 'firebase/database'
 import RoundHistoryInfoCard from './RoundHistoryInfoCard'
 
@@ -43,7 +43,7 @@ export default function RoundHistory() {
 
     return (
         <View>
-            <ImageBackground source={require('../assets/background.jpg')} resizeMode="cover" style={styles.background}>
+            <ImageBackground source={require('../../assets/background.jpg')} resizeMode="cover" style={styles.background}>
                 <View style={{ width: "100%" }}>
                     <RoundHistoryInfoCard round={roundHandled} roundCardVisible={roundCardVisible} setRoundCardVisible={setRoundCardVisible} />
                     <Input labelStyle={{ color: "black", paddingBottom: 5 }} inputStyle={{ "backgroundColor": "white", padding: 5 }} placeholder="Search for rounds by course" label="Course search" onChangeText={text => {

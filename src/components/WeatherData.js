@@ -21,9 +21,7 @@ export default function WeatherData() {
             .then(data => setWeatherData({ temperature: data.main.temp, wind: data.wind.speed, description: data.weather[0].description, icon: `http://openweathermap.org/img/w/${data.weather[0].icon}.png` }))
             .catch(error => setWeatherData(mockData))
     }, [userCoords]) 
-
-    console.log(weatherData)
-    
+  
     return (
         <View style={styles.container}>
             <View style={styles.dataInfo}><MaterialCommunityIcons name="temperature-celsius" size={24} color="#0043ff" /><Text style={{ ...styles.weatherinfo, paddingLeft: 5 }}>{weatherData.temperature}</Text></View>

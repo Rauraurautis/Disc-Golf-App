@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, TouchableOpacity, Dimensions, View } from 'react-native'
-import MapComponent from '../utils/MapComponent';
+import MapComponent from '../../components/MapComponent';
 import { MaterialIcons } from '@expo/vector-icons';
-import { setSelectedCourse } from '../redux/actions';
+import { setSelectedCourse } from '../../redux/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { AntDesign } from '@expo/vector-icons';
 

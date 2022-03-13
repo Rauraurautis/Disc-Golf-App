@@ -3,9 +3,9 @@ import { Text, View, StyleSheet, TouchableOpacity, Dimensions } from 'react-nati
 import CourseDialog from './CourseDialog';
 import CourseInfoCard from './CourseInfoCard';
 import { MaterialIcons } from '@expo/vector-icons';
-import MapComponent from './utils/MapComponent';
-import { useSelector, useDispatch } from 'react-redux';
-import ToastMessage from './utils/ToastMessage';
+import MapComponent from '../../components/MapComponent';
+import { useSelector } from 'react-redux';
+import ToastMessage from '../../components/ToastMessage';
 
 
 

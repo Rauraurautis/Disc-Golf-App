@@ -5,8 +5,9 @@ import Dialog from "react-native-dialog"
 import * as SQLite from "expo-sqlite";
 import { FontAwesome } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
-import { setSelectedPlayers } from '../redux/actions';
-import { db as firebaseDb } from '../FirebaseSetup';
+import { setSelectedPlayers, setPlayers } from '../../redux/actions';
+import { db as firebaseDb } from '../../utils/FirebaseSetup';
+import { db as sqliteDb } from '../../utils/SQLiteSetup';
 import { push, ref, serverTimestamp } from 'firebase/database';
 
 export default function Scoreboard({ players, scoreboardVisible, setScoreboardVisible, round, isRoundOver, navigation }) {
@@ -40,9 +41,9 @@ export default function Scoreboard({ players, scoreboardVisible, setScoreboardVi
                 playerRoundsWon = player.wonrounds + 1
             }
             let playerRoundsPlayed = player.playedrounds + 1
-            let playerAvgScore = (player.avgscore + player.roundAvgScore) / playerRoundsPlayed
+            let playerAvgScore = ((player.avgscore + player.roundAvgScore) / playerRoundsPlayed).toFixed(2)
             let playerThrows = player.throws + player.roundScore
-
+            console.log(player.avgscore + " " + player.roundAvgScore + " " + playerRoundsPlayed)
             db.transaction(tx => {
                 tx.executeSql(`UPDATE Player SET throws = ${playerThrows}, avgscore = ${playerAvgScore}, wonrounds = ${playerRoundsWon}, playedrounds = ${playerRoundsPlayed} WHERE id = ${player.id}`),
                     [playerThrows, playerAvgScore, playerRoundsWon, playerRoundsPlayed], () => { }, error => console.error(error)
@@ -57,7 +58,11 @@ export default function Scoreboard({ players, scoreboardVisible, setScoreboardVi
             { "players": players.map(p => { return { name: p.name, roundAvgScore: p.roundAvgScore, roundScore: p.roundScore } }), course: round.name, date: serverTimestamp() }
         )
         navigation.navigate("Home")
-
+        sqliteDb.transaction(tx => {
+            tx.executeSql("SELECT * FROM Player", [], (trans, result) => {
+              dispatch(setPlayers(result.rows._array))
+            })
+          })
     }
 
 

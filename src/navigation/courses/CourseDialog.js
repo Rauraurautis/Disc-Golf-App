@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Dialog from "react-native-dialog"
 import { ScrollView, View, StyleSheet } from 'react-native'
-import { db } from '../utils/FirebaseSetup'
+import { db } from '../../utils/FirebaseSetup'
 import { push, ref, onValue, set } from 'firebase/database';
 
 export default function CourseDialog({ addDialogVisible, setAddDialogVisible, courseDetails, setCourseDetails, toastRef }) {

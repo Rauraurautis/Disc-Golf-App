@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { ListItem } from 'react-native-elements'
-import { View, StyleSheet, TouchableOpacity, FlatList, Alert } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, FlatList} from 'react-native'
 import * as SQLite from "expo-sqlite";
 import { Entypo } from '@expo/vector-icons';
 import { useSelector, useDispatch } from 'react-redux';
-import { setPlayers, setSelectedPlayers } from "../redux/actions"
-import ToastMessage from '../utils/ToastMessage';
+import { setSelectedPlayers } from "../../redux/actions"
+import ToastMessage from '../../components/ToastMessage';
 
 
 const db = SQLite.openDatabase("players.db")

@@ -1,14 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { Input, ListItem } from 'react-native-elements'
 import { Text, View, ImageBackground, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
-import * as SQLite from "expo-sqlite";
+import { db as sqliteDb } from '../../utils/SQLiteSetup';
 import Dialog from "react-native-dialog";
 import PlayerStatsInfoCard from './PlayerStatsInfoCard';
-import ToastMessage from './utils/ToastMessage';
+import ToastMessage from '../../components/ToastMessage';
 import { useSelector, useDispatch } from 'react-redux';
-import { setPlayers } from './redux/actions';
-
-const db = SQLite.openDatabase("players.db")
+import { setPlayers } from '../../redux/actions';
 
 export default function Players({ }) {
     const [player, setPlayer] = useState({ name: "" });
@@ -23,7 +21,7 @@ export default function Players({ }) {
     //database functions
 
     const updatePlayers = () => {
-        db.transaction(tx => {
+        sqliteDb.transaction(tx => {
             tx.executeSql("SELECT * FROM Player", [], (trans, result) => {
                 dispatch(setPlayers(result.rows._array))
             })
@@ -31,27 +29,21 @@ export default function Players({ }) {
     }
 
     const getSinglePlayer = (id) => {
-        db.transaction(tx => {
+        sqliteDb.transaction(tx => {
             tx.executeSql("SELECT * FROM Player WHERE id = ?", [id], (trans, result) => {
                 setPlayerHandled({ ...player, name: result.rows._array[0].name, id: id })
             })
         })
     }
 
-    const createTable = () => {
-        db.transaction(tx => {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS Player (id integer primary key not null, name text, throws integer default 0, avgscore real default 0.0, wonrounds integer default 0, playedrounds integer default 0);")
-        })
-    }
-
     const savePlayer = (player) => {
-        db.transaction((tx) => {
+        sqliteDb.transaction((tx) => {
             tx.executeSql('INSERT INTO Player (name) VALUES (?)', [player]);
         }, error => console.error(error), updatePlayers)
     }
 
     const deletePlayer = (id) => {
-        db.transaction(tx => {
+        sqliteDb.transaction(tx => {
             tx.executeSql("DELETE FROM Player WHERE id = ?;", [id], updatePlayers)
         })
         setDialogVisibility(false)
@@ -89,7 +81,7 @@ export default function Players({ }) {
 
     return (
         <View>
-            <ImageBackground source={require('../assets/background.jpg')} resizeMode="cover" style={styles.background}>
+            <ImageBackground source={require('../../assets/background.jpg')} resizeMode="cover" style={styles.background}>
                 <PlayerStatsInfoCard player={playerHandled} infoCardVisible={infoCardVisible} setInfoCardVisible={setInfoCardVisible} />
                 <View>
                     <Dialog.Container visible={dialogVisibility}>

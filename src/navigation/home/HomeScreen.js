@@ -1,14 +1,12 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import * as Location from 'expo-location';
-import { useDispatch, useSelector } from 'react-redux';
-import { setPlayers, setCourses } from './redux/actions';
-import { setUserCoords } from './redux/actions';
-import * as SQLite from "expo-sqlite";
-import WeatherData from './utils/WeatherData';
-import { db as coursesDb } from '../utils/FirebaseSetup';
-import { ref, onValue, set } from 'firebase/database';
-const db = SQLite.openDatabase("players.db")
+import { useDispatch } from 'react-redux';
+import WeatherData from '../../components/WeatherData';
+import { setCourses, setPlayers, setUserCoords } from '../../redux/actions';
+import { db as coursesDb } from '../../utils/FirebaseSetup';
+import { db as sqliteDb, createTableIfNotExists } from '../../utils/SQLiteSetup';
+import { ref, onValue } from 'firebase/database';
 
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch()
@@ -25,11 +23,8 @@ export default function HomeScreen({ navigation }) {
   //Sets all players
 
   useEffect(() => {
-    db.transaction(tx => {
-      tx.executeSql("CREATE TABLE IF NOT EXISTS Player (id integer primary key not null, name text, throws integer default 0, avgscore real default 0.0, wonrounds integer default 0, playedrounds integer default 0);")
-    })
-
-    db.transaction(tx => {
+    createTableIfNotExists()
+    sqliteDb.transaction(tx => {
       tx.executeSql("SELECT * FROM Player", [], (trans, result) => {
         dispatch(setPlayers(result.rows._array))
       })
@@ -56,7 +51,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <WeatherData />
-      <ImageBackground source={require('../assets/background.jpg')} resizeMode="cover" style={styles.background}>
+      <ImageBackground source={require('../../assets/background.jpg')} resizeMode="cover" style={styles.background}>
         <View style={{ flex: 2, flexDirection: "column" }}>
           <TouchableOpacity onPress={() => navigation.navigate("PlayerSelection")} style={styles.startRoundBtn}>
             <Text style={styles.startRoundBtnText}>Start Round</Text>

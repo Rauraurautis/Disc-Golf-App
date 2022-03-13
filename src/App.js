@@ -3,14 +3,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider } from 'react-redux';
 import { StyleSheet } from 'react-native';
-import { Store } from './components/redux/store';
-import HomeScreen from './components/HomeScreen';
-import Courses from './components/Courses';
-import Players from './components/Players';
-import PlayerSelection from './components/roundcomponents/PlayerSelection';
-import CourseSelection from './components/roundcomponents/CourseSelection';
-import RoundScreen from './components/roundcomponents/RoundScreen';
-import RoundHistory from './components/RoundHistory';
+import { Store } from './redux/store';
+import HomeScreen from './navigation/home/HomeScreen';
+import Courses from './navigation/courses/Courses';
+import Players from './navigation/players/Players';
+import PlayerSelection from './navigation/round/PlayerSelection';
+import CourseSelection from './navigation/round/CourseSelection';
+import RoundScreen from './navigation/round/RoundScreen';
+import RoundHistory from './navigation/roundhistory/RoundHistory';
 
 
 const Stack = createNativeStackNavigator();
