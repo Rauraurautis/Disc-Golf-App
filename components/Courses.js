@@ -2,12 +2,9 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Text, View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
 import CourseDialog from './CourseDialog';
 import CourseInfoCard from './CourseInfoCard';
-import { ref, onValue, set } from 'firebase/database';
-import { db } from './FirebaseSetup';
 import { MaterialIcons } from '@expo/vector-icons';
 import MapComponent from './utils/MapComponent';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCourses } from './redux/actions';
 import ToastMessage from './utils/ToastMessage';
 
 
@@ -19,19 +16,8 @@ export default function Players({ navigation }) {
   const [addDialogVisible, setAddDialogVisible] = useState(false)
   const [courseCardVisible, setCourseCardVisible] = useState(false)
   const [courseDetails, setCourseDetails] = useState({ holes: [] })
-  const dispatch = useDispatch()
 
   const toastRef = useRef()
-
- 
-
-  useEffect(() => {
-    const coursesRef = ref(db, "Courses/")
-    onValue(coursesRef, (snapshot) => {
-      const data = snapshot.val()
-      dispatch(setCourses(Object.values(data)))
-    })
-  }, [])
 
   const setUserLocation = async () => {
     setPosition(userCoords);
@@ -58,7 +44,6 @@ export default function Players({ navigation }) {
       {courseCardVisible && <CourseInfoCard courseDetails={courseDetails} courseCardVisible={courseCardVisible} setCourseCardVisible={setCourseCardVisible} />}
       <MapComponent styles={styles} handleMarkerPress={handleMarkerPress} courses={courses} position={position} courseDetails={courseDetails} mapPressEvent={mapPressEvent}>
         <View style={{ ...styles.btnView, justifyContent: userCoords.latitude ? "space-between" : "flex-end" }}>
-
           {userCoords.latitude && <TouchableOpacity style={styles.currentLocationBtn} onPress={() => setUserLocation()}><MaterialIcons name="my-location" size={24} color="black" /></TouchableOpacity>}
           {courseDetails.coordinates && <TouchableOpacity style={styles.newCourseBtn} onPress={() => setAddDialogVisible(true)}><Text style={{ fontSize: 35 }}>+</Text></TouchableOpacity>}
         </View>

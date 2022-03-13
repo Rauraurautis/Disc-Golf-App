@@ -1,33 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Button, Input, ListItem } from 'react-native-elements'
+import { Input, ListItem } from 'react-native-elements'
 import { Text, View, ImageBackground, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
 import * as SQLite from "expo-sqlite";
 import Dialog from "react-native-dialog";
 import PlayerStatsInfoCard from './PlayerStatsInfoCard';
 import ToastMessage from './utils/ToastMessage';
+import { useSelector, useDispatch } from 'react-redux';
+import { setPlayers } from './redux/actions';
 
 const db = SQLite.openDatabase("players.db")
 
-export default function Players({ navigation }) {
+export default function Players({ }) {
     const [player, setPlayer] = useState({ name: "" });
     const [playerHandled, setPlayerHandled] = useState({})
-    const [playerList, setPlayerList] = useState([]);
+    const { players } = useSelector(state => state.playerReducer)
     const [dialogVisibility, setDialogVisibility] = useState(false)
     const [infoCardVisible, setInfoCardVisible] = useState(false)
 
     const toastRef = useRef()
-
-    useEffect(() => {
-        createTable()
-        updatePlayers()
-    }, [])
+    const dispatch = useDispatch()
 
     //database functions
 
     const updatePlayers = () => {
         db.transaction(tx => {
             tx.executeSql("SELECT * FROM Player", [], (trans, result) => {
-                setPlayerList(result.rows._array)
+                dispatch(setPlayers(result.rows._array))
             })
         })
     }
@@ -74,7 +72,7 @@ export default function Players({ navigation }) {
 
 
     const playerRender = ({ item }) => {
-        return <ListItem containerStyle={{backgroundColor: "#EBEEFA"}} bottomDivider onLongPress={() => {
+        return <ListItem containerStyle={{ backgroundColor: "#EBEEFA" }} bottomDivider onLongPress={() => {
             getSinglePlayer(item.id)
             setDialogVisibility(true)
         }} onPress={() => showPlayerStats(item)}>
@@ -102,19 +100,20 @@ export default function Players({ navigation }) {
                         <Dialog.Button label="Cancel" onPress={() => setDialogVisibility(false)} />
                         <Dialog.Button label="Delete" onPress={() => {
                             deletePlayer(playerHandled.id)
-                            toastRef.current.showToast()}} />
+                            toastRef.current.showToast()
+                        }} />
                     </Dialog.Container>
                 </View>
                 <View style={styles.inputs}>
-                <ToastMessage ref={toastRef} message={`${playerHandled.name} deleted!`}/>
-                    <Input labelStyle={{color: "#00000", paddingBottom: 5}} inputStyle={{ "backgroundColor": "white", padding: 5 }} placeholder="Enter a new player's name" label="Name" onChangeText={text => setPlayer({ name: text })} value={player.name}></Input>
-                    <TouchableOpacity style={styles.saveBtn} onPress={() => addPlayer(player)}><Text style={{ color: "white", fontSize: 20}}>Save player</Text></TouchableOpacity>
+                    <ToastMessage ref={toastRef} message={`${playerHandled.name} deleted!`} />
+                    <Input labelStyle={{ color: "black", paddingBottom: 5 }} inputStyle={{ "backgroundColor": "white", padding: 5 }} placeholder="Enter a new player's name" label="Name" onChangeText={text => setPlayer({ name: text })} value={player.name}></Input>
+                    <TouchableOpacity style={styles.saveBtn} onPress={() => addPlayer(player)}><Text style={{ color: "white", fontSize: 20 }}>Save player</Text></TouchableOpacity>
                 </View>
-                
+
                 <View style={{ flex: 2, width: "95%", marginTop: 10 }}>
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
-                        data={playerList}
+                        data={players}
                         renderItem={playerRender} />
                 </View>
             </ImageBackground>

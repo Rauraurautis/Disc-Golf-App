@@ -14,18 +14,19 @@ const db = SQLite.openDatabase("players.db")
 export default function PlayerSelection({ navigation }) {
     const { selectedPlayers, players } = useSelector((state) => state.playerReducer)
     const [toastActive, setToastActive] = useState(false)
+    const [message, setMessage] = useState("asd")
     const dispatch = useDispatch()
 
     const toastRef = useRef()
 
-    useEffect(async () => {
-        db.transaction(tx => {
-            tx.executeSql("SELECT * FROM Player", [], (trans, result) => {
-                dispatch(setPlayers(result.rows._array))
-            })
-        })
-    }, [])
+    useEffect(() => {
+        if (selectedPlayers.length === 5) {
+            setMessage("Maximum amount of players is 5!")
+        } else {
+            setMessage("You need to choose at least one player!")
+        }
 
+    }, [selectedPlayers])
 
     const handleListItemPress = (player) => {
         const filteredPlayers = selectedPlayers.filter(p => player.id === p.id)
@@ -34,7 +35,11 @@ export default function PlayerSelection({ navigation }) {
             return
         }
         if (selectedPlayers.length === 5) {
-            Alert.alert("Max amount of players is 5!")
+            toastRef.current.showToast()
+            setToastActive(true)
+            setTimeout(() => {
+                setToastActive(false)
+            }, 2000)
             return
         }
         dispatch(setSelectedPlayers(selectedPlayers.concat(player)))
@@ -42,6 +47,7 @@ export default function PlayerSelection({ navigation }) {
 
     const handleNextScreen = () => {
         if (selectedPlayers.length === 0) {
+            setMessage("You need to choose at least one player!")
             toastRef.current.showToast()
             setToastActive(true)
             setTimeout(() => {
@@ -65,7 +71,7 @@ export default function PlayerSelection({ navigation }) {
     return (
         <View style={StyleSheet.container}>
             <View style={{ position: "absolute", height: toastActive ? "20%" : "0%", width: "100%", zIndex: 2, pointerEvents: "none" }}>
-                <ToastMessage ref={toastRef} message={"You need to choose at least one player!"} />
+                <ToastMessage ref={toastRef} message={message} />
             </View>
             <View>
                 <FlatList

@@ -2,17 +2,41 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import * as Location from 'expo-location';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPlayers, setCourse } from './redux/actions';
+import { setPlayers, setCourses } from './redux/actions';
 import { setUserCoords } from './redux/actions';
 import * as SQLite from "expo-sqlite";
 import WeatherData from './utils/WeatherData';
-
-
+import { db as coursesDb } from '../utils/FirebaseSetup';
+import { ref, onValue, set } from 'firebase/database';
 const db = SQLite.openDatabase("players.db")
 
 export default function HomeScreen({ navigation }) {
-  const { userCoords } = useSelector(state => state.userReducer)
   const dispatch = useDispatch()
+
+  //Sets all courses
+  useEffect(() => {
+    const coursesRef = ref(coursesDb, "Courses/")
+    onValue(coursesRef, (snapshot) => {
+      const data = snapshot.val()
+      dispatch(setCourses(Object.values(data)))
+    })
+  }, [])
+
+  //Sets all players
+
+  useEffect(() => {
+    db.transaction(tx => {
+      tx.executeSql("CREATE TABLE IF NOT EXISTS Player (id integer primary key not null, name text, throws integer default 0, avgscore real default 0.0, wonrounds integer default 0, playedrounds integer default 0);")
+    })
+
+    db.transaction(tx => {
+      tx.executeSql("SELECT * FROM Player", [], (trans, result) => {
+        dispatch(setPlayers(result.rows._array))
+      })
+    })
+  }, [])
+
+  //Sets user coordinates
 
   useEffect(() =>
     (async function () {
@@ -23,6 +47,7 @@ export default function HomeScreen({ navigation }) {
       let location = await Location.getCurrentPositionAsync({});
       console.log(location)
       dispatch(setUserCoords({ latitude: location.coords.latitude, longitude: location.coords.longitude, latitudeDelta: 0.10, longitudeDelta: 0.10 }));
+
     })()
     , [])
 

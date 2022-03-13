@@ -1,14 +1,12 @@
 import React, { useState } from 'react'
 import Dialog from "react-native-dialog"
 import { ScrollView, View, StyleSheet } from 'react-native'
-import { db } from './FirebaseSetup'
+import { db } from '../utils/FirebaseSetup'
 import { push, ref, onValue, set } from 'firebase/database';
-import ToastMessage from './utils/ToastMessage';
 
 export default function CourseDialog({ addDialogVisible, setAddDialogVisible, courseDetails, setCourseDetails, toastRef }) {
     const [secondScreen, setSecondScreen] = useState(false)
     const [numberOfHoles, setNumberOfHoles] = useState(null)
-    const [holesArray, setHolesArray] = useState([])
 
 
 

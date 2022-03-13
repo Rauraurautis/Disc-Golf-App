@@ -7,11 +7,13 @@ import PropTypes from "prop-types"
 
 
 export default function MapComponent({ styles, children, handleMarkerPress, mapPressEvent, courseDetails, courses, position }) {
-    const [currentPositionMarker, setCurrentPositionMarker] = useState([])
+    const [currentPositionMarker, setCurrentPositionMarker] = useState(null)
     const { userCoords } = useSelector(state => state.userReducer)
 
     useEffect(() => {
-        setCurrentPositionMarker({ coordinates: userCoords })
+        if (userCoords.latitude) {
+            setCurrentPositionMarker({ coordinates: userCoords })
+        }
     }, [])
 
     return (
@@ -26,7 +28,7 @@ export default function MapComponent({ styles, children, handleMarkerPress, mapP
                 {courseDetails.coordinates && <Marker coordinate={courseDetails.coordinates}></Marker>}
                 {courses.map((course, i) => {
                     return <Marker onPress={() => handleMarkerPress(course)} coordinate={course.coordinates} key={i} title={course.address} description={`Holes: ${Object.keys(course.holes).length}`}>
-                        <Image source={require("./basket.png")} style={{ height: 35, width: 35 }} />
+                        <Image source={require("../../assets/basket.png")} style={{ height: 35, width: 35 }} />
                     </Marker>
                 })}
                 {currentPositionMarker && <Marker coordinate={currentPositionMarker.coordinates}><Ionicons name="person" size={40} color="green" /></Marker>}
