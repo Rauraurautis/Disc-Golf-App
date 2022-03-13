@@ -69,12 +69,13 @@ export default function RoundScreen({ navigation, route }) {
             <FlatList
                 keyExtractor={(item, index) => index.toString()}
                 data={selectedPlayers}
-                renderItem={({ item }) => (<Input label={item.name} keyboardType="numeric" value={"" + scoreInputs.filter(ip => ip.id === item.id)[0].score} onChangeText={text => handleScoreChange(item.id, parseInt(text))} />)} />
+                renderItem={({ item }) => (<Input textAlign="center" labelStyle={styles.scoreLabel}inputContainerStyle={styles.scoreInput} label={item.name} keyboardType="numeric"
+                 value={"" + scoreInputs.filter(ip => ip.id === item.id)[0].score} onChangeText={text => handleScoreChange(item.id, isNaN(parseInt(text)) ? "" : parseInt(text))} />)} />
             <View style={styles.btnContainer}>
-                <TouchableOpacity style={styles.nextBtn} onPress={() => setScoreboardVisible(true)}>
+                <TouchableOpacity style={{...styles.btn, marginLeft: 10}} onPress={() => setScoreboardVisible(true)}>
                     <Text style={{ fontSize: 25 }}>Scoreboard</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.nextBtn} onPress={() => handleNextHole()}>
+                <TouchableOpacity style={{...styles.btn, marginRight: 10,}} onPress={() => handleNextHole()}>
                     <Text style={{ fontSize: 25 }}>{isRoundOver() === undefined ? "Results" : "Next hole"}</Text>
                 </TouchableOpacity>
             </View>
@@ -92,20 +93,22 @@ const styles = StyleSheet.create({
     holeinfo:
     {
         textAlign: "center",
-        fontSize: 35
+        fontSize: 35,
+        paddingBottom: 15
     },
     parinfo:
     {
         textAlign: "center",
-        fontSize: 20
+        fontSize: 20,
+        paddingBottom: 25
     },
-    nextBtn: {
+    btn: {
         alignSelf: "center",
         width: 150,
-        height: 100,
+        height: 50,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "lightblue",
+        backgroundColor: "#f19d48",
         marginBottom: 25,
         borderRadius: 20
     },
@@ -119,6 +122,14 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         position: "absolute",
         zIndex: 2
-
+    },
+    scoreInput: {
+        width: "20%",
+        alignSelf: "center",
+        textAlign: "center"
+    },
+    scoreLabel: {
+        color: "black",
+        alignSelf: "center"
     }
 })

@@ -26,7 +26,7 @@ export default function RoundHistory() {
     }
 
     const roundRender = ({ item }) => {
-        return <ListItem bottomDivider containerStyle={{width: "97%", alignSelf:"center", backgroundColor: "#EBEEFA"}}onPress={() => handleRoundClick(item)}>
+        return <ListItem bottomDivider containerStyle={{ width: "97%", alignSelf: "center", backgroundColor: "#EBEEFA" }} onPress={() => handleRoundClick(item)}>
             <ListItem.Content>
                 <ListItem.Title><Text style={{ fontWeight: "bold" }}>{item.course}</Text></ListItem.Title>
             </ListItem.Content>
@@ -44,19 +44,19 @@ export default function RoundHistory() {
     return (
         <View>
             <ImageBackground source={require('../assets/background.jpg')} resizeMode="cover" style={styles.background}>
-                <View style={{width: "100%"}}>
-                <RoundHistoryInfoCard round={roundHandled} roundCardVisible={roundCardVisible} setRoundCardVisible={setRoundCardVisible} />
-                <Input labelStyle={{color: "black", paddingBottom: 5}} inputStyle={{ "backgroundColor": "white", padding: 5 }} placeholder="Search for rounds by course" label="Course search" onChangeText={text => {
-                    const searchRegex = new RegExp(text, "gi")
-                    setSearchedRounds(rounds.filter(round => round.course.match(searchRegex)))
-                }
-                } />
-                <View>
-                    <FlatList
-                        keyExtractor={(item, index) => index.toString()}
-                        data={searchedRounds}
-                        renderItem={roundRender} />
-                </View>
+                <View style={{ width: "100%" }}>
+                    <RoundHistoryInfoCard round={roundHandled} roundCardVisible={roundCardVisible} setRoundCardVisible={setRoundCardVisible} />
+                    <Input labelStyle={{ color: "black", paddingBottom: 5 }} inputStyle={{ "backgroundColor": "white", padding: 5 }} placeholder="Search for rounds by course" label="Course search" onChangeText={text => {
+                        const searchRegex = new RegExp(text, "gi")
+                        setSearchedRounds(rounds.filter(round => round.course.match(searchRegex)))
+                    }
+                    } />
+                    <View>
+                        <FlatList
+                            keyExtractor={(item, index) => index.toString()}
+                            data={searchedRounds}
+                            renderItem={roundRender} />
+                    </View>
                 </View>
             </ImageBackground>
         </View>
