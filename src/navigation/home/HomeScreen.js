@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import * as Location from 'expo-location';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import WeatherData from '../../components/WeatherData';
-import { setCourses, setPlayers, setUserCoords } from '../../redux/actions';
+import { setCourses, setPlayers, setUserCoords, setLanguage } from '../../redux/actions';
 import { db as coursesDb } from '../../utils/FirebaseSetup';
 import { db as sqliteDb } from '../../utils/SQLiteSetup';
 import { ref, onValue } from 'firebase/database';
 
 export default function HomeScreen({ navigation }) {
+  const { language } = useSelector(state => state.userReducer)
   const dispatch = useDispatch()
 
   //Sets all courses
@@ -63,7 +64,8 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate("RoundHistory")}><Text style={styles.btnText}>Round history</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.btn} onPress={() => dispatch(language === "english" ? setLanguage("finnish") : setLanguage("english"))}><Text style={styles.btnText}>{language}</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate("RoundHistory")}><Text style={styles.btnText}>{language === "english" ? "Round history" : "Kierroshistoria"}</Text></TouchableOpacity>
           <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate("Courses")}><Text style={styles.btnText}>Courses</Text></TouchableOpacity>
           <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate("Players")}><Text style={styles.btnText}>Players</Text></TouchableOpacity>
         </View>

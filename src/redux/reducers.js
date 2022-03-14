@@ -1,4 +1,4 @@
-import { SET_PLAYERS, SET_SELECTED_PLAYERS, SET_SELECTED_COURSE, SET_COURSES, SET_USER_COORDS } from "./actions"
+import { SET_PLAYERS, SET_SELECTED_PLAYERS, SET_SELECTED_COURSE, SET_COURSES, SET_USER_COORDS, SET_LANGUAGE } from "./actions"
 
 const initialState = {
     players: [],
@@ -6,7 +6,8 @@ const initialState = {
     courses: [],
     selectedCourse: null,
     round: {},
-    userCoords: {}
+    userCoords: {},
+    language: "english"
 }
 
 export const playerReducer = (state = initialState, action) => {
@@ -35,6 +36,8 @@ export const userReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_USER_COORDS:
             return { ...state, userCoords: action.payload }
+        case SET_LANGUAGE:
+            return { ...state, language: action.payload }
         default:
             return state
     }

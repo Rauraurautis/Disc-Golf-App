@@ -1,29 +1,32 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { ListItem } from 'react-native-elements'
-import { View, StyleSheet, TouchableOpacity, FlatList} from 'react-native'
+import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
 import * as SQLite from "expo-sqlite";
 import { Entypo } from '@expo/vector-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedPlayers } from "../../redux/actions"
 import ToastMessage from '../../components/ToastMessage';
-
+import { finnish, english } from "./RoundText"
 
 const db = SQLite.openDatabase("players.db")
 
 export default function PlayerSelection({ navigation }) {
     const { selectedPlayers, players } = useSelector((state) => state.playerReducer)
+    const { language } = useSelector(state => state.userReducer)
+    const textLanguage = language === "finnish" ? finnish : english
     const [toastActive, setToastActive] = useState(false)
     const [message, setMessage] = useState("asd")
     const dispatch = useDispatch()
 
     const toastRef = useRef()
+    
 
     useEffect(() => {
         if (selectedPlayers.length === 5) {
-            setMessage("Maximum amount of players is 5!")
+            setMessage(textLanguage.fivePlusPlayerMsg)
         } else {
-            setMessage("You need to choose at least one player!")
+            setMessage(textLanguage.zeroPlayerMsg)
         }
 
     }, [selectedPlayers])
@@ -47,7 +50,7 @@ export default function PlayerSelection({ navigation }) {
 
     const handleNextScreen = () => {
         if (selectedPlayers.length === 0) {
-            setMessage("You need to choose at least one player!")
+            setMessage(textLanguage.zeroPlayerMsg)
             toastRef.current.showToast()
             setToastActive(true)
             setTimeout(() => {

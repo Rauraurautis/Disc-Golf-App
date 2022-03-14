@@ -3,6 +3,7 @@ export const SET_PLAYERS = "SET_PLAYERS"
 export const SET_SELECTED_COURSE = "SET_SELECTED_COURSE"
 export const SET_COURSES = "SET_COURSES"
 export const SET_USER_COORDS = "SET_USER_COORDS"
+export const SET_LANGUAGE = "SET_LANGUAGE"
 
 
 //Player actions
@@ -24,6 +25,9 @@ export const setCourses = (courses) =>
 
 export const setUserCoords = (coords) =>
     ({ type: SET_USER_COORDS, payload: coords })
+
+export const setLanguage = (coords) =>
+    ({ type: SET_LANGUAGE, payload: coords })
 
 
 

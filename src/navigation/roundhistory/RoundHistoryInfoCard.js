@@ -4,7 +4,7 @@ import { ListItem } from 'react-native-elements';
 import Dialog from "react-native-dialog"
 import { ScrollView } from 'react-native-web';
 
-export default function RoundHistoryInfoCard({ round, roundCardVisible, setRoundCardVisible }) {
+export default function RoundHistoryInfoCard({ round, roundCardVisible, setRoundCardVisible, textLanguage }) {
 
     const playerRender = ({ item }, i) => {
         return <ListItem bottomDivider>
@@ -12,7 +12,7 @@ export default function RoundHistoryInfoCard({ round, roundCardVisible, setRound
                 <ListItem.Title>{item.name}</ListItem.Title>
             </ListItem.Content>
             <ListItem.Content right>
-                <ListItem.Title>Score: {item.roundScore}</ListItem.Title>
+                <ListItem.Title>{textLanguage.score}{item.roundScore}</ListItem.Title>
             </ListItem.Content>
         </ListItem>
     }
@@ -29,7 +29,7 @@ export default function RoundHistoryInfoCard({ round, roundCardVisible, setRound
                         renderItem={playerRender} />
                 </View>
                 <View style={styles.buttons}>
-                    <Dialog.Button label="Return" onPress={() => setRoundCardVisible(false)} />
+                    <Dialog.Button label={textLanguage.return} onPress={() => setRoundCardVisible(false)} />
                 </View>
             </Dialog.Container >
         </View >

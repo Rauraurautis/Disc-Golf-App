@@ -4,10 +4,12 @@ import { Input, Icon } from 'react-native-elements';
 import { useSelector } from 'react-redux'
 import Scoreboard from './Scoreboard';
 import ToastMessage, { toastRef } from '../../components/ToastMessage';
+import { finnish, english } from "./RoundText"
 
 export default function RoundScreen({ navigation, route }) {
     const [scoreboardVisible, setScoreboardVisible] = useState(false)
-
+    const { language } = useSelector(state => state.userReducer)
+    const textLanguage = language === "finnish" ? finnish : english
     const { selectedPlayers } = useSelector(state => state.playerReducer)
     const { selectedCourse, courses } = useSelector(state => state.courseReducer)
     const [round, setRound] = useState({ ...selectedCourse, roundStatus: { hole: 1, currentTotalPar: 0 } })
@@ -63,9 +65,9 @@ export default function RoundScreen({ navigation, route }) {
 
     return (
         <View style={styles.container}>
-            <ToastMessage ref={toastRef} message={"You need to enter scores for all players!"} />
-            <Scoreboard scoreboardVisible={scoreboardVisible} setScoreboardVisible={setScoreboardVisible} players={players} round={round} isRoundOver={isRoundOver} navigation={navigation} />
-            <Text style={styles.holeinfo}>{`Hole ${round.roundStatus.hole}`}</Text>
+            <ToastMessage ref={toastRef} message={textLanguage.scoreMessage} />
+            <Scoreboard scoreboardVisible={scoreboardVisible} setScoreboardVisible={setScoreboardVisible} players={players} round={round} isRoundOver={isRoundOver} navigation={navigation} textLanguage={textLanguage} />
+            <Text style={styles.holeinfo}>{`${textLanguage.hole} ${round.roundStatus.hole}`}</Text>
             <Text style={styles.parinfo}>{`Par ${round.holes[round.roundStatus.hole - 1]}`}</Text>
             <FlatList
                 keyExtractor={(item, index) => index.toString()}
@@ -74,10 +76,10 @@ export default function RoundScreen({ navigation, route }) {
                     value={"" + scoreInputs.filter(ip => ip.id === item.id)[0].score} onChangeText={text => handleScoreChange(item.id, isNaN(parseInt(text)) ? "" : parseInt(text))} />)} />
             <View style={{ ...styles.btnContainer, justifyContent: isRoundOver() !== undefined ? "space-between" : "flex-end" }}>
                 {isRoundOver() !== undefined ? <TouchableOpacity style={{ ...styles.btn, marginLeft: 10 }} onPress={() => setScoreboardVisible(true)}>
-                    <Text style={{ fontSize: 25 }}>Scoreboard</Text>
+                    <Text style={{ fontSize: 25 }}>{textLanguage.scoreboard}</Text>
                 </TouchableOpacity> : null}
                 <TouchableOpacity style={{ ...styles.btn, marginRight: 10 }} onPress={() => handleNextHole()}>
-                    <Text style={{ fontSize: 25 }}>{isRoundOver() === undefined ? "Results" : "Next hole"}</Text>
+                    <Text style={{ fontSize: 25 }}>{isRoundOver() === undefined ? textLanguage.results : textLanguage.nextHole}</Text>
                 </TouchableOpacity>
             </View>
 

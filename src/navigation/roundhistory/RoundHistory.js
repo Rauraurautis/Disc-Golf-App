@@ -4,12 +4,17 @@ import { Input, ListItem } from 'react-native-elements'
 import { db } from '../../utils/FirebaseSetup'
 import { ref, onValue } from 'firebase/database'
 import RoundHistoryInfoCard from './RoundHistoryInfoCard'
+import { finnish, english } from "./RoundHistoryText"
+import { useSelector } from 'react-redux'
 
 export default function RoundHistory() {
+    const { language } = useSelector(state => state.userReducer)
     const [rounds, setRounds] = useState([])
     const [roundHandled, setRoundHandled] = useState({})
     const [roundCardVisible, setRoundCardVisible] = useState(false)
     const [searchedRounds, setSearchedRounds] = useState([])
+
+    const textLanguage = language === "finnish" ? finnish : english
 
     useEffect(() => {
         const coursesRef = ref(db, "Results/")
@@ -36,7 +41,7 @@ export default function RoundHistory() {
                 <ListItem.Title>{new Date(item.date).toString().substring(4, 24)}</ListItem.Title>
             </ListItem.Content>
             <ListItem.Content right>
-                <ListItem.Title>Players: {item.players.length}</ListItem.Title>
+                <ListItem.Title>{textLanguage.players}{item.players.length}</ListItem.Title>
             </ListItem.Content>
         </ListItem>
 
@@ -47,17 +52,17 @@ export default function RoundHistory() {
         <View>
             <ImageBackground source={require('../../assets/background.jpg')} resizeMode="cover" style={styles.background}>
                 <View style={{ width: "100%" }}>
-                    <RoundHistoryInfoCard round={roundHandled} roundCardVisible={roundCardVisible} setRoundCardVisible={setRoundCardVisible} />
-                    <Input labelStyle={{ color: "black", paddingBottom: 5 }} inputStyle={{ "backgroundColor": "white", padding: 5 }} placeholder="Search for rounds by course" label="Course search" onChangeText={text => {
+                    <RoundHistoryInfoCard round={roundHandled} roundCardVisible={roundCardVisible} setRoundCardVisible={setRoundCardVisible} textLanguage={textLanguage} />
+                    <Input labelStyle={{ color: "black", paddingBottom: 5 }} inputStyle={{ "backgroundColor": "white", padding: 5 }} placeholder={textLanguage.placeholder} label={textLanguage.inputLabel} onChangeText={text => {
                         const searchRegex = new RegExp(text, "gi")
                         setSearchedRounds(rounds.filter(round => round.course.match(searchRegex)))
                     }
                     } />
-                        <FlatList
-                            keyExtractor={(item, index) => index.toString()}
-                            data={searchedRounds}
-                            renderItem={roundRender}
-                             />
+                    <FlatList
+                        keyExtractor={(item, index) => index.toString()}
+                        data={searchedRounds}
+                        renderItem={roundRender}
+                    />
                 </View>
             </ImageBackground>
         </View>

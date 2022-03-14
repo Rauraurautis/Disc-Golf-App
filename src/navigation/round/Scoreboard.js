@@ -10,7 +10,7 @@ import { db as firebaseDb } from '../../utils/FirebaseSetup';
 import { db as sqliteDb } from '../../utils/SQLiteSetup';
 import { push, ref, serverTimestamp } from 'firebase/database';
 
-export default function Scoreboard({ players, scoreboardVisible, setScoreboardVisible, round, isRoundOver, navigation }) {
+export default function Scoreboard({ players, scoreboardVisible, setScoreboardVisible, round, isRoundOver, navigation, textLanguage }) {
     const [dialogVisibility, setDialogVisibility] = useState()
     const dispatch = useDispatch()
 
@@ -85,26 +85,26 @@ export default function Scoreboard({ players, scoreboardVisible, setScoreboardVi
         <View>
             <View>
                 <Dialog.Container visible={dialogVisibility}>
-                    <Dialog.Title>Upload to cloud?</Dialog.Title>
+                    <Dialog.Title>{textLanguage.cloudMsg}</Dialog.Title>
                     <Dialog.Description>
-                        Would you like to upload the results to cloud?
+                    {textLanguage.cloudMsgDescription}
                     </Dialog.Description>
-                    <Dialog.Button label="No thanks" onPress={() => {
+                    <Dialog.Button label={textLanguage.cloudMsgNegative} onPress={() => {
                         setDialogVisibility(false)
                         navigation.navigate("Home")
                     }} />
-                    <Dialog.Button label="Yes please" onPress={() => uploadToCloud()} />
+                    <Dialog.Button label={textLanguage.cloudPositive}onPress={() => uploadToCloud()} />
                 </Dialog.Container>
             </View>
             <Dialog.Container visible={scoreboardVisible}>
-                <Dialog.Title style={styles.title}>Scoreboard</Dialog.Title>
+                <Dialog.Title style={styles.title}>{textLanguage.scoreboard}</Dialog.Title>
                 <FlatList
                     keyExtractor={(item, index) => index.toString()}
                     data={sortPlayersByScores()}
                     renderItem={playerRender} />
                 <View style={styles.buttons}>
-                    {isRoundOver() && <Dialog.Button label="Return" onPress={() => setScoreboardVisible(false)} />}
-                    {isRoundOver() === undefined && <Dialog.Button label="Finish" onPress={() => finishRound()} />}
+                    {isRoundOver() && <Dialog.Button label={textLanguage.return} onPress={() => setScoreboardVisible(false)} />}
+                    {isRoundOver() === undefined && <Dialog.Button label={textLanguage.finish} onPress={() => finishRound()} />}
                 </View>
             </Dialog.Container >
         </View >

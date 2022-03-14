@@ -12,6 +12,8 @@ export default function Players({ }) {
     const [player, setPlayer] = useState({ name: "" });
     const [playerHandled, setPlayerHandled] = useState({})
     const { players } = useSelector(state => state.playerReducer)
+    const { language } = useSelector(state => state.userReducer)
+    const textLanguage = language === "finnish" ? finnish : english
     const [dialogVisibility, setDialogVisibility] = useState(false)
     const [infoCardVisible, setInfoCardVisible] = useState(false)
 
