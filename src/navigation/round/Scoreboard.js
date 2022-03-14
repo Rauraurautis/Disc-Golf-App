@@ -57,12 +57,12 @@ export default function Scoreboard({ players, scoreboardVisible, setScoreboardVi
         push(ref(firebaseDb, "Results/"),
             { "players": players.map(p => { return { name: p.name, roundAvgScore: p.roundAvgScore, roundScore: p.roundScore } }), course: round.name, date: serverTimestamp() }
         )
-        navigation.navigate("Home")
         sqliteDb.transaction(tx => {
             tx.executeSql("SELECT * FROM Player", [], (trans, result) => {
-              dispatch(setPlayers(result.rows._array))
+                dispatch(setPlayers(result.rows._array))
             })
-          })
+        })
+        navigation.navigate("Home")
     }
 
 

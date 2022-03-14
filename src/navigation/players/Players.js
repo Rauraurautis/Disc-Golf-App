@@ -58,8 +58,8 @@ export default function Players({ }) {
     //database functions end
 
     const showPlayerStats = (player) => {
-        setInfoCardVisible(true)
         setPlayerHandled(player)
+        setInfoCardVisible(true)
     }
 
 

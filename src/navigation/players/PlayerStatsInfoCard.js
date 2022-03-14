@@ -5,6 +5,7 @@ import Dialog from "react-native-dialog"
 
 export default function PlayerStatsInfoCard({ player, infoCardVisible, setInfoCardVisible }) {
 
+
     return (
         <View>
             <Dialog.Container visible={infoCardVisible}>

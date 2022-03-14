@@ -15,7 +15,9 @@ export default function CourseSelection({ navigation }) {
 
   const dispatch = useDispatch()
 
-
+  useEffect(() => {
+    dispatch(setSelectedCourse(null))
+  }, [])
 
   const setUserLocation = async () => {
     setPosition(userCoords);

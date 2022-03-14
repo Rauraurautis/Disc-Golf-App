@@ -2,6 +2,7 @@ import React from 'react'
 import { FlatList, Text, View, StyleSheet, Button } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import Dialog from "react-native-dialog"
+import { ScrollView } from 'react-native-web';
 
 export default function RoundHistoryInfoCard({ round, roundCardVisible, setRoundCardVisible }) {
 
@@ -19,9 +20,9 @@ export default function RoundHistoryInfoCard({ round, roundCardVisible, setRound
 
     return (
         <View>
-            <Dialog.Container contentStyle={{maxHeight: 600}} visible={roundCardVisible}>
+            <Dialog.Container contentStyle={{maxHeight: 2000}} visible={roundCardVisible}>
                 <Dialog.Title style={styles.title}>{round.course}</Dialog.Title>
-                <View style={{height: "50%"}}>
+                <View style={{height: "70%"}}>
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
                         data={round.players}

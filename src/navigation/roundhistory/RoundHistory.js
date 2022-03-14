@@ -53,12 +53,11 @@ export default function RoundHistory() {
                         setSearchedRounds(rounds.filter(round => round.course.match(searchRegex)))
                     }
                     } />
-                    <View>
                         <FlatList
                             keyExtractor={(item, index) => index.toString()}
                             data={searchedRounds}
-                            renderItem={roundRender} />
-                    </View>
+                            renderItem={roundRender}
+                             />
                 </View>
             </ImageBackground>
         </View>

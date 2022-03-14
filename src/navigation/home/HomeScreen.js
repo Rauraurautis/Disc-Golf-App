@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import WeatherData from '../../components/WeatherData';
 import { setCourses, setPlayers, setUserCoords } from '../../redux/actions';
 import { db as coursesDb } from '../../utils/FirebaseSetup';
-import { db as sqliteDb, createTableIfNotExists } from '../../utils/SQLiteSetup';
+import { db as sqliteDb } from '../../utils/SQLiteSetup';
 import { ref, onValue } from 'firebase/database';
 
 export default function HomeScreen({ navigation }) {
@@ -25,7 +25,10 @@ export default function HomeScreen({ navigation }) {
   //Sets all players
 
   useEffect(() => {
-    createTableIfNotExists()
+    sqliteDb.transaction(tx => {
+      tx.executeSql("CREATE TABLE IF NOT EXISTS Player (id integer primary key not null, name text, throws integer default 0, avgscore real default 0.0, wonrounds integer default 0, playedrounds integer default 0);")
+    })
+
     sqliteDb.transaction(tx => {
       tx.executeSql("SELECT * FROM Player", [], (trans, result) => {
         dispatch(setPlayers(result.rows._array))

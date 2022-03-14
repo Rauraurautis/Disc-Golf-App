@@ -30,7 +30,6 @@ export default function RoundScreen({ navigation, route }) {
         scoreInputs.forEach(ip => {
             setPlayers(players.map(p => {
                 if (p.id === ip.id) {
-                    console.log(round.roundStatus.currentTotalPar + " " + round.roundStatus.hole)
                     return { ...p, roundScore: p.roundScore += ip.score, roundAvgScore: ((ip.score - round.holes[round.roundStatus.hole - 1]) + p.roundAvgScore) / round.roundStatus.hole }
                 } else {
                     return p

@@ -15,7 +15,7 @@ export default function WeatherData() {
     const { userCoords } = useSelector(state => state.userReducer)
     const [weatherData, setWeatherData] = useState({})
 
-    useEffect(() => {
+     useEffect(() => {
         axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${userCoords.latitude}&lon=${userCoords.longitude}&units=metric&appid=665ecd56dfc08dbb50feb8b8f5034e28`)
             .then(res => res.data)
             .then(data => setWeatherData({ temperature: data.main.temp, wind: data.wind.speed, description: data.weather[0].description, icon: `http://openweathermap.org/img/w/${data.weather[0].icon}.png` }))
