@@ -16,7 +16,9 @@ export default function HomeScreen({ navigation }) {
     const coursesRef = ref(coursesDb, "Courses/")
     onValue(coursesRef, (snapshot) => {
       const data = snapshot.val()
-      dispatch(setCourses(Object.values(data)))
+      if (data) {
+        dispatch(setCourses(Object.values(data)))
+      }
     })
   }, [])
 

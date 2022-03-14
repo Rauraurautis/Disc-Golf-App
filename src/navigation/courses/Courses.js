@@ -31,11 +31,11 @@ export default function Players({ navigation }) {
   }
 
   const mapPressEvent = (e) => {
-    setCourseDetails({ ...courseDetails, coordinates: e.nativeEvent.coordinate })
+    setCourseDetails({ holes: [], coordinates: e.nativeEvent.coordinate })
     setPosition({ latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude, latitudeDelta: 0.10, longitudeDelta: 0.10 })
   }
 
-
+ 
 
   return (
     <>

@@ -15,8 +15,10 @@ export default function RoundHistory() {
         const coursesRef = ref(db, "Results/")
         onValue(coursesRef, (snapshot) => {
             const data = snapshot.val()
-            setRounds(Object.values(data))
-            setSearchedRounds(Object.values(data))
+            if (data) {
+                setRounds(Object.values(data))
+                setSearchedRounds(Object.values(data))
+            }
         })
     }, [])
 
