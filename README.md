@@ -3,7 +3,7 @@
 ## Overview
 This is a React Native-based project for Mobiiliohjelmointi-course at Haaga-Helia, built using the Expo framework and platform.
 
-**LIVE LINK:** https://expo.dev/@rauraurautis/DiscGolfApp
+**LIVE LINK:** https://expo.dev/@rauraurautis/DiscGolfApp (scan the QR-code using Expo app on your mobile device)
 
 ## Features
 This app is a simple score-tracking application for disc golf. The user can save players locally and browse as well as add courses which are cloud-based. The user can also of course start a round and use the app for tracking their and their friends' scores. After completing a round players get an option to upload the round to the cloud. Users may view uploaded rounds in the round history screen. The app also tracks data such as average score as well as won rounds, which can be viewed in the players-screen.
